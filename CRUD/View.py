@@ -101,7 +101,34 @@ def update_console():
 
     Operasi.update(no_buku,pk,date_add,penulis,judul,tahun)
 
+def delete_console():
+    read_console()
+    while (True):
+        print("Silahkan pilih nomor buku yang akan di Delete")
+        no_buku = int(input("Nomor Buku: "))
+        data_buku = Operasi.read(index=no_buku)
+
+        if data_buku:
+            data_break = data_buku.split(",")
+            pk = data_break[0]
+            date_add = data_break[1]
+            penulis = data_break[2]
+            judul = data_break[3]
+            tahun = data_break[4][:-1]
+
+            print("\n" + "=" * 100)
+            print("Data yang ingin di Delete ")
+            print(f"1. Judul\t: {judul:.40}")
+            print(f"2. Penulis\t: {penulis:.40}")
+            print(f"3. Tahun\t: {tahun:4}")
+            is_done = input("Apakah Anda Yakin ? (y/n)")
+            if is_done.lower() == "y":
+                Operasi.delete(no_buku)
+                break
+        else:
+            print("nomor tidak valid, silahkan masukkan lagi")
 
 
+    print("Data Berhasil Di Delete")
 
 
