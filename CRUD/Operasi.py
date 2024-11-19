@@ -32,15 +32,26 @@ def create_first_data():
     except:
         print("Udah Lah Gagal Bosss !!!")
 
-def read():
+
+
+def read(**kwargs):
     try:
         with open(Database.DB_NAME,'r') as file:
             content = file.readlines()
-            print(content)
-            return content
+            jumlah_buku =  len(content)
+            if "index" in kwargs:
+                index_buku = kwargs["index"]-1
+                if index_buku < 0 or index_buku > jumlah_buku:
+                    return False
+                else:
+                    return content[index_buku]
+            else:
+                return content
     except:
         print("Membaca Database Fail")
         return False
+
+
 
 def create(tahun,judul,penulis):
     data = Database.TEMPLATE.copy()
@@ -61,3 +72,23 @@ def create(tahun,judul,penulis):
 
 
 
+
+def update(no_buku,pk,date_add,penulis,judul,tahun):
+    data = Database.TEMPLATE.copy()
+
+    data["pk"] = pk
+    data["date_add"] = date_add
+    data["penulis"] = penulis + Database.TEMPLATE["penulis"][len(penulis):]
+    data["judul"] = judul + Database.TEMPLATE["judul"][len(judul):]
+    data["tahun"] = str(tahun)
+
+    data_str = f'{data["pk"]},{data["date_add"]},{data["penulis"]},{data["judul"]},{data["tahun"]}\n'
+
+    panjang_data = len(data_str)
+
+    try:
+        with(open(Database.DB_NAME,'r+',encoding="utf-8")) as file:
+            file.seek(panjang_data*(no_buku-1))
+            file.write(data_str)
+    except:
+        print("error dalam update data")
